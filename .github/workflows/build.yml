@@ -18,16 +18,19 @@ jobs:
       - name: Build project
         run: mvn clean package -DskipTests
 
+      - name: Move artifact
+        run: mkdir artifacts && cp target/*.jar artifacts
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: jar
-          path: artifacts/*.jar
+          path: artifacts
           retention-days: 1
 
   test:
     name: Test
-    needs: [build]
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -40,9 +43,9 @@ jobs:
       - name: Run tests
         run: mvn test
 
-  dockerize:
+  docker:
     name: Create docker container
-    needs: [test]
+    needs: [ test ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
