@@ -68,12 +68,12 @@ jobs:
         timeout-minutes: 5
         run: docker compose up -d
 
-      - name: Run API tests
+      - name: Run API Tests
         uses: matt-ball/newman-action@master
         with:
           collection: postman/collection.json
           environment: postman/local-environment.json
-          delayRequest: 100
+          delayRequest: 500
           reporters: '[ "cli" ]'
 
       - name: Stop containers
