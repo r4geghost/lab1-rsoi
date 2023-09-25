@@ -36,7 +36,30 @@ jobs:
 
       - name: Run tests
         run: mvn test
-#      - uses: docker/setup-buildx-action@v2
-#
-#      - name: Docker Compose
-#        run: docker compose up -d
+
+  dockerize:
+    name: Create docker container
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '19'
+          cache: 'maven'
+
+      - name: Build project
+        run: mvn clean package -DskipTests
+
+      - name: Run tests
+        run: mvn test
+
+      - uses: docker/setup-buildx-action@v2
+
+      - name: Build images
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up
