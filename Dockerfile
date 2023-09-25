@@ -1,6 +1,6 @@
 FROM amazoncorretto:19 as builder
 WORKDIR /home/ubuntu/application
-ARG JAR_FILE=target/lab1-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=artifacts/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 LABEL authors="Михаил Дюсов ИУ7-11М"
