@@ -1,4 +1,4 @@
-name: Build project
+name: Lab1 CI/CD
 on:
   push:
     branches: [ master ]
@@ -47,19 +47,19 @@ jobs:
       - name: Run tests
         run: mvn test
 
-  dockerize:
-    name: Create docker container
+  integrationTest:
+    name: Create docker container and run integration tests
     needs: [ test ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      - uses: docker/setup-buildx-action@v2
+
       - uses: actions/download-artifact@v3
         with:
           name: jar
           path: artifacts/
-
-      - uses: docker/setup-buildx-action@v2
 
       - name: Build images
         run: docker compose build
@@ -67,6 +67,14 @@ jobs:
       - name: Run containers
         timeout-minutes: 5
         run: docker compose up -d
+
+      - name: Run API tests
+        uses: matt-ball/newman-action@master
+        with:
+          collection: postman/collection.json
+          environment: postman/local-environment.json
+          delayRequest: 100
+          reporters: '[ "cli" ]'
 
       - name: Stop containers
         if: always()
