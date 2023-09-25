@@ -68,8 +68,8 @@ jobs:
         timeout-minutes: 5
         run: docker compose up -d
 
-      - name: Sleep for 30 seconds
-        run: sleep 30s
+      - name: Sleep for 15 seconds
+        run: sleep 15s
         shell: bash
 
       - name: Run API Tests
@@ -77,7 +77,7 @@ jobs:
         with:
           collection: postman/collection.json
           environment: postman/local-environment.json
-          delayRequest: 500
+          delayRequest: 100
           reporters: '[ "cli" ]'
 
       - name: Stop containers
