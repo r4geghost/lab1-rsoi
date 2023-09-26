@@ -48,7 +48,7 @@ jobs:
         run: mvn test
 
   integrationTest:
-    name: Create docker container and run integration tests
+    name: Dockerize and run integration tests
     needs: [ test ]
     runs-on: ubuntu-latest
     steps:
@@ -68,7 +68,7 @@ jobs:
         timeout-minutes: 5
         run: docker compose up -d
 
-      - name: Sleep for 15 seconds
+      - name: Sleep for Spring Boot to start
         run: sleep 15s
         shell: bash
 
