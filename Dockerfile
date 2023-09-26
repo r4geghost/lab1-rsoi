@@ -1,8 +1,11 @@
+FROM maven:3.8-amazoncorretto-19 AS build
+COPY . .
+RUN mvn clean package -DskipTests
+
 FROM amazoncorretto:19 as builder
 WORKDIR application
-RUN mvn clean package -DskipTests
 ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} application.jar
+COPY --from=build ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 LABEL authors="Михаил Дюсов ИУ7-11М"
 
