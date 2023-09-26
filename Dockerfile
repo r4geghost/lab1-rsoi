@@ -1,15 +1,15 @@
 FROM amazoncorretto:19 as builder
-WORKDIR /home/ubuntu/application
-ARG JAR_FILE=artifacts/*.jar
+WORKDIR application
+ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 LABEL authors="Михаил Дюсов ИУ7-11М"
 
 FROM amazoncorretto:19
 ENV PORT=8080
-WORKDIR /home/ubuntu/application
-COPY --from=builder /home/ubuntu/application/spring-boot-loader/ ./
-COPY --from=builder /home/ubuntu/application/dependencies/ ./
-COPY --from=builder /home/ubuntu/application/snapshot-dependencies/ ./
-COPY --from=builder /home/ubuntu/application/application/ ./
+WORKDIR application
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/application/ ./
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

@@ -18,14 +18,11 @@ jobs:
       - name: Build project
         run: mvn clean package -DskipTests
 
-      - name: Move artifact
-        run: mkdir artifacts && cp target/*.jar artifacts
-
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: jar
-          path: artifacts
+          path: target
           retention-days: 1
 
   test:
@@ -59,7 +56,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: jar
-          path: artifacts/
+          path: target/
 
       - name: Build images
         run: docker compose build
