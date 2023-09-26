@@ -84,6 +84,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Trigger deploy via Render API
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run:
+            curl "$deploy_url"
+
+      - name: Sleep for 5 sec
+        run: sleep 5s
+        shell: bash
+
       - name: Wait for Render Deployment
         uses: bounceapp/render-action@0.6.0
         with:
