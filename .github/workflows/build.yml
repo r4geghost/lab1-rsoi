@@ -45,7 +45,7 @@ jobs:
         run: mvn test
 
   integrationTest:
-    name: Create docker container and run integration tests
+    name: Dockerize and run integration tests
     needs: [ test ]
     runs-on: ubuntu-latest
     steps:
@@ -65,7 +65,11 @@ jobs:
         timeout-minutes: 5
         run: docker compose up -d
 
-      - name: Run API tests
+      - name: Sleep for Spring Boot to start
+        run: sleep 15s
+        shell: bash
+
+      - name: Run API Tests
         uses: matt-ball/newman-action@master
         with:
           collection: postman/collection.json
