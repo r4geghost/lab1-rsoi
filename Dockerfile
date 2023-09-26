@@ -1,5 +1,6 @@
 FROM amazoncorretto:19 as builder
 WORKDIR application
+RUN mvn clean package -DskipTests
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
