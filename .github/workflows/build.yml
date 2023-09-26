@@ -53,11 +53,6 @@ jobs:
 
       - uses: docker/setup-buildx-action@v2
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: jar
-          path: target/
-
       - name: Build images
         run: docker compose build
 
@@ -89,13 +84,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: jar
-          path: target/
-
       - name: Trigger deploy via Render API
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run:
           curl "$deploy_url"
+
+      - name: Wait for Render Deployment
+        uses: bounceapp/render-action@0.6.0
+        with:
+          render-token: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          service-id: srv-ck9d09ugtj9c73c4f2m0?key=DUUe_zokiXk
+          retries: 20
+          wait: 16000
+          sleep: 30000
