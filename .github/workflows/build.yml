@@ -81,3 +81,16 @@ jobs:
         if: always()
         continue-on-error: true
         run: docker compose down -v
+
+  deploy:
+    name: Deploy to Render
+    needs: [ integrationTest ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Trigger deploy via Render API
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run:
+          curl "$deploy_url"
